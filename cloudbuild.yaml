@@ -8,12 +8,12 @@ steps:
   # Step 2: Build the Docker image for the Go application
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Docker image'
-    args: ['build', '-t', 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:$SHORT_SHA', '.']
+    args: ['build', '-t', 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v1', '.']
 
   # Step 3: Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Docker image'
-    args: ['push', 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:$SHORT_SHA']
+    args: ['push', 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v1']
 
   # Step 4: Update the production manifest with the image built in this build
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -22,7 +22,7 @@ steps:
     args:
     - '-c'
     - |
-      sed -i "s|<todo>|us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:$SHORT_SHA|g" prod/deployment.yaml
+      sed -i "s|<todo>|us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v1|g" prod/deployment.yaml
 
   # Step 5: Apply the production deployment YAML file to the production namespace
   - name: 'gcr.io/cloud-builders/kubectl'
